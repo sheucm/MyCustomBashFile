@@ -1,0 +1,11 @@
+# Author: eric <st0502123@gmail.com>
+# Create Time: 2018.11.13
+
+# Example: playrtsp rtsp://admin:pass@192.168.85.9/stream0
+
+# play rtsp
+gst-launch-1.0 -e rtspsrc location=$1 protocols=tcp \
+	! rtph264depay ! avdec_h264 \
+	! videoconvert ! videoscale \
+	! "video/x-raw,width=640,height=360" \
+	! autovideosink

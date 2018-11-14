@@ -1,0 +1,40 @@
+#!/bin/bash
+
+POSITIONAL=()
+ADD=false
+DEL=false
+
+if [[ $# -gt 2 ]]; then
+	echo "Error: Too much args!"
+	exit 1
+fi
+
+key="$1"
+case $key in
+	-a|--add)
+	ADD=true
+	IP="$2"
+	;;
+	-d|--del)
+	DEL=true
+	;;
+	*)
+	echo "Usage: $0 --add <ip> | --del"
+	exit 1
+	;;
+esac
+
+
+if [[ ${ADD} == true ]]; then
+	sudo ifconfig enp3s0:0 ${IP}
+	echo "`ifconfig enp3s0:0`"
+fi
+
+if [[ ${DEL} == true ]]; then
+	sudo ifconfig enp3s0:0 down
+	sudo ifconfig enp3s0 down
+	sudo ifconfig enp3s0 up
+	echo "`ifconfig`"
+fi
+
+

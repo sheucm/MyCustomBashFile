@@ -1,0 +1,21 @@
+# Author: eric <st0502123@gmail.com>
+# Create Time: 2018.11.13
+
+# Example: playrtsp rtsp://admin:pass@192.168.85.9/stream0 rtsp://admin:pass@192.168.85.2/stream0
+
+# play rtsp
+gst-launch-1.0 -e \
+videomixer name=mix \
+        sink_0::xpos=0   sink_0::ypos=0  sink_0::alpha=0\
+        sink_1::xpos=0   sink_1::ypos=0 \
+        sink_2::xpos=640 sink_2::ypos=0 \
+    ! autovideosink \
+videotestsrc pattern="black" \
+    ! video/x-raw,width=1280,height=360 \
+    ! mix.sink_0 \
+rtspsrc location=$1 protocols=tcp ! rtph264depay ! avdec_h264 \
+    ! videoconvert ! videoscale ! video/x-raw,width=640,height=360 \
+    ! mix.sink_1 \
+rtspsrc location=$2 protocols=tcp ! rtph264depay ! avdec_h264 \
+    ! videoconvert ! videoscale ! video/x-raw,width=640,height=360 \
+    ! mix.sink_2
